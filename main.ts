@@ -1,23 +1,88 @@
-input.onButtonPressed(Button.A, function () {
-    for(let i=1;i<100;i++) {
-        kitronik_motor_driver.motorOn(kitronik_motor_driver.Motors.Motor1, kitronik_motor_driver.MotorDirection.Forward, i)
-        kitronik_motor_driver.motorOn(kitronik_motor_driver.Motors.Motor2, kitronik_motor_driver.MotorDirection.Forward, i)
-    }
+input.onButtonPressed(Button.AB, function () {
+    leftSpeed = 0
+    rightSpeed = 0
+    setSpeed()
 })
+
+input.onButtonPressed(Button.A, function () {
+    setLeftSpeed()
+})
+
+function setLeftSpeed() {
+    if (leftSpeed >= 100)
+    {
+        leftUp = false
+    }
+ 
+    if (leftSpeed <= 0)
+    {
+        leftUp = true
+    }
+ 
+    if (leftUp)
+    {
+        leftSpeed = leftSpeed + 10
+    } else {
+        leftSpeed = leftSpeed - 10
+    }
+    setSpeed()
+}
 
 input.onButtonPressed(Button.B, function () {
-    kitronik_motor_driver.motorOn(kitronik_motor_driver.Motors.Motor1, kitronik_motor_driver.MotorDirection.Forward, 23)
-    kitronik_motor_driver.motorOn(kitronik_motor_driver.Motors.Motor2, kitronik_motor_driver.MotorDirection.Forward, 23)
-    basic.showArrow(ArrowNames.North)
-    basic.pause(5000)
-    kitronik_motor_driver.motorOn(kitronik_motor_driver.Motors.Motor1, kitronik_motor_driver.MotorDirection.Reverse, 23)
-    kitronik_motor_driver.motorOn(kitronik_motor_driver.Motors.Motor2, kitronik_motor_driver.MotorDirection.Forward, 23)
-    basic.pause(5000)
-    kitronik_motor_driver.motorOff(kitronik_motor_driver.Motors.Motor1)
-    kitronik_motor_driver.motorOff(kitronik_motor_driver.Motors.Motor2)
+    setRightSpeed()
 })
 
+function setRightSpeed() {
+    if (rightSpeed >= 100)
+    {
+        rightUp = false
+    }
+ 
+    if (rightSpeed <= 0)
+    {
+        rightUp = true
+    }
+ 
+    if (rightUp)
+    {
+        rightSpeed = rightSpeed + 10
+    } else {
+        rightSpeed = rightSpeed - 10
+    }
+    setSpeed()
+}
 
+radio.onReceivedValue(function (name: string, value: number) {
+    switch (name) {
+        case "left":
+           leftSpeed = value
+           break;
+        case "right":
+           rightSpeed = value
+           break;
+        case "both":
+           leftSpeed = value
+           rightSpeed = value
+            break;
+    }
+    setSpeed()
+})
+
+function setSpeed () {
+    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, leftSpeed)
+    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, rightSpeed)
+    if (leftSpeed > rightSpeed){
+        basic.showArrow(ArrowNames.East)
+    } else if (rightSpeed > leftSpeed){
+        basic.showArrow(ArrowNames.West)
+    } else {
+        basic.showArrow(ArrowNames.North)
+    }
+}
+let rightSpeed = 0
+let leftSpeed = 0
+let leftUp = true
+let rightUp = true
 basic.forever(function () {
 	
 })
