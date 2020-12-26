@@ -2,7 +2,14 @@ input.onButtonPressed(Button.AB, function () {
     leftSpeed = 0
     rightSpeed = 0
     setSpeed()
-    basic.clearScreen()
+
+    if (direction== directions.forward){
+        direction = directions.reverse
+        basic.showArrow(ArrowNames.South)
+    } else {
+        direction = directions.forward
+        basic.showArrow(ArrowNames.North)
+    }
 })
 
 input.onButtonPressed(Button.A, function () {
@@ -65,20 +72,40 @@ radio.onReceivedValue(function (name: string, value: number) {
            leftSpeed = value
            rightSpeed = value
             break;
+        case "direction":
+            if (value == directions.reverse){
+                direction = directions.reverse
+            } else {
+                direction = directions.forward
+            }
+            break;
     }
     setSpeed()
 })
 
 function setSpeed () {
-    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, leftSpeed)
-    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, rightSpeed)
-    if (leftSpeed > rightSpeed){
-        basic.showArrow(ArrowNames.East)
-    } else if (rightSpeed > leftSpeed){
-        basic.showArrow(ArrowNames.West)
+    if (direction == directions.forward){
+        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, leftSpeed)
+        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, rightSpeed)
+        if (leftSpeed > rightSpeed){
+            basic.showArrow(ArrowNames.NorthEast)
+        } else if (rightSpeed > leftSpeed){
+            basic.showArrow(ArrowNames.NorthWest)
+        } else {
+            basic.showArrow(ArrowNames.North)
+        }
     } else {
-        basic.showArrow(ArrowNames.North)
+        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, leftSpeed)
+        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, rightSpeed)
+        if (leftSpeed > rightSpeed){
+            basic.showArrow(ArrowNames.SouthEast)
+        } else if (rightSpeed > leftSpeed){
+            basic.showArrow(ArrowNames.SouthWest)
+        } else {
+            basic.showArrow(ArrowNames.South)
+        }
     }
+
     if (rightSpeed== 0 && leftSpeed == 0)
     {
         basic.clearScreen()
@@ -89,6 +116,11 @@ let leftSpeed = 0
 let leftUp = true
 let rightUp = true
 radio.setGroup(1)
+
+let directions = {"forward":1, "reverse":0}
+let direction = directions.forward
+basic.showArrow(ArrowNames.North)
+
 basic.forever(function () {
 	
 })
