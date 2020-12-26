@@ -2,6 +2,7 @@ input.onButtonPressed(Button.AB, function () {
     leftSpeed = 0
     rightSpeed = 0
     setSpeed()
+    basic.clearScreen()
 })
 
 input.onButtonPressed(Button.A, function () {
@@ -78,11 +79,16 @@ function setSpeed () {
     } else {
         basic.showArrow(ArrowNames.North)
     }
+    if (rightSpeed== 0 && leftSpeed == 0)
+    {
+        basic.clearScreen()
+    }
 }
 let rightSpeed = 0
 let leftSpeed = 0
 let leftUp = true
 let rightUp = true
+radio.setGroup(1)
 basic.forever(function () {
 	
 })
