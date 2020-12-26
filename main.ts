@@ -71,6 +71,13 @@ radio.onReceivedValue(function (name: string, value: number) {
         case "both":
            leftSpeed = value
            rightSpeed = value
+            if (direction== directions.forward){
+                direction = directions.reverse
+                basic.showArrow(ArrowNames.South)
+            } else {
+                direction = directions.forward
+                basic.showArrow(ArrowNames.North)
+            }
             break;
         case "direction":
             if (value == directions.reverse){
