@@ -1,5 +1,5 @@
 {
-    "name": "bil",
+    "name": "bil analog remote control",
     "description": "",
     "dependencies": {
         "core": "*",
