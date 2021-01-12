@@ -53,7 +53,7 @@ function setSpeed() {
     if (speed == 0) {
         Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor1)
         Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor2)
-        showSpeedInformation()        
+        //showSpeedInformation()        
         return
     } 
 
@@ -69,14 +69,14 @@ function setSpeed() {
         speedLeft = speed * -1
         speedRight = speed * -1
         if (direction > 50) {
-            speedRight = speed - (direction - 50)
+            speedRight = (speed * -1) - (direction - 50)
         } else if (direction < 50) {
-            speedLeft = speed - (50 - direction)
+            speedLeft = (speed * -1) - (direction - 50)
         }
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, speedLeft)
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, speedRight)
     }
-    showSpeedInformation()        
+    //showSpeedInformation()        
 }
 
 radio.onReceivedValue(function (name: string, value: number) {
