@@ -90,8 +90,8 @@ radio.onReceivedValue(function (name: string, value: number) {
         setSpeed()
       break;
       case "beep": 
-        music.builtInMelody(Melodies.BaDing)
-        music.stopAllSounds()
+        // music.builtInMelody(Melodies.BaDing)
+        // music.stopAllSounds()
       break;
       case "ls": 
         leftSpeed = value
