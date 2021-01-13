@@ -58,9 +58,9 @@ function setSpeed() {
 
     if (speed > 0) {
         if (direction > 50) {
-            speedRight = speed - (direction - 50)
+            speedLeft = speed - (direction - 50)
         } else if (direction < 50) {
-            speedLeft = speed - (50 - direction)
+            speedRight = speed - (50 - direction)
         }
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, speedLeft)
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, speedRight)
