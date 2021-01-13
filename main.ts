@@ -81,9 +81,7 @@ function setSpeed() {
 radio.onReceivedValue(function (name: string, value: number) {
   switch (name) {
       case "fw":
-        speed = value
-        setSpeed()
-        if (speed > 0) {
+        if (value > 0) {
             basic.showArrow(ArrowNames.North)
         } else {
             basic.showArrow(ArrowNames.South)
