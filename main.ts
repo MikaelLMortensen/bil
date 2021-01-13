@@ -4,8 +4,7 @@ let speed = 0
 let direction = 50
 
 radio.setGroup(20)
-basic.showIcon(IconNames.Tortoise)
-
+basic.showArrow(ArrowNames.North)
 
 function showSpeedInformation() {
     if (speed < 5) {
@@ -69,9 +68,9 @@ function setSpeed() {
         speedLeft = speed * -1
         speedRight = speed * -1
         if (direction > 50) {
-            speedRight = (speed * -1) - (direction - 50)
+            speedRight = speedRight - (direction - 50)
         } else if (direction < 50) {
-            speedLeft = (speed * -1) - (direction - 50)
+            speedLeft = speedLeft - direction
         }
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, speedLeft)
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, speedRight)
@@ -81,6 +80,15 @@ function setSpeed() {
 
 radio.onReceivedValue(function (name: string, value: number) {
   switch (name) {
+      case "fw":
+        speed = value
+        setSpeed()
+        if (speed > 0) {
+            basic.showArrow(ArrowNames.North)
+        } else {
+            basic.showArrow(ArrowNames.South)
+        }
+      break;
       case "sp": 
         speed = value
         setSpeed()
