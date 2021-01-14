@@ -1,7 +1,9 @@
-let leftSpeed = 0
-let rightSpeed = 0
-let speed = 0
-let direction = 50
+let leftSpeed = 0    // left motor speed,    values: 0 - 100
+let rightSpeed = 0   // right motor speed,   values: 0 - 100
+// Input Variables
+let speed = 0        // speed setting,     values: 0 - 100
+let direction = 100  // direction setting  values: -100 - 100
+let forward = 1      // forward / reverse flag, values 0: reverse / 1:forward
 
 radio.setGroup(20)
 basic.showArrow(ArrowNames.North)
@@ -15,23 +17,31 @@ function setSpeed() {
         Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor2)
         return
     } 
-
-    if (speed > 0) {
-        if (direction > 50) {
-            speedRight = speed - (direction - 50)
-        } else if (direction < 50) {
-            speedLeft = speed - (50 - direction)
-        }
+    
+    if (direction > 0) {
+        // Turning right, right motor is slowing down
+        // Eks:
+        // speed = 75
+        // direction = 10
+        // speedRight = 75 - Math.floor(75 * (10 / 100))
+        // speedRight = 75 - 7 == 68
+        speedRight = speed - Math.floor(speed * (direction / 100)) 
+    } else {
+        // Turning left, left motor is slowing down
+        // Eks:
+        // speed = 75
+        // direction = -20
+        // speedLeft = 75 - Math.floor(75 * (20 * -1 / 100))
+        // 60 = 75 - 15
+        speedLeft = speed - Math.floor(speed * (direction * -1 / 100)) 
+    }
+    
+    if (forward = 1) {
+        // forward
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, speedLeft)
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, speedRight)
-    } else {
-        speedLeft = speed * -1
-        speedRight = speed * -1
-        if (direction > 50) {
-            speedLeft = speedLeft - (direction - 50)
-        } else if (direction < 50) {
-            speedRight = speedRight - direction
-        }
+    } else { 
+        // reverse
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, speedLeft)
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, speedRight)
     }
@@ -41,8 +51,10 @@ radio.onReceivedValue(function (name: string, value: number) {
   switch (name) {
       case "fw":
         if (value > 0) {
+            forward = 1
             basic.showArrow(ArrowNames.North)
         } else {
+            forward = 0
             basic.showArrow(ArrowNames.South)
         }
       break;
@@ -53,10 +65,6 @@ radio.onReceivedValue(function (name: string, value: number) {
       case "dir": 
         direction = value
         setSpeed()
-      break;
-      case "beep": 
-        // music.builtInMelody(Melodies.BaDing)
-        // music.stopAllSounds()
       break;
       case "ls": 
         leftSpeed = value
