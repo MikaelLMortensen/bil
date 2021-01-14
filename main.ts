@@ -8,13 +8,13 @@ let forward = true      // forward / reverse flag, values false: reverse / true:
 radio.setGroup(20)
 basic.showArrow(ArrowNames.North)
 
-
 function setSpeed() {
     let speedLeft = speed
     let speedRight = speed
-    if (speed == 0) {
+    if (speed < 5) {
         Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor1)
         Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor2)
+        basic.clearScreen()
         return
     } 
     
@@ -41,8 +41,8 @@ function setSpeed() {
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, speedRight)
     } else { 
         // reverse
-        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, speedLeft)
-        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, speedRight)
+        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, speedRight)
+        Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, speedLeft)
     }
 }
 
