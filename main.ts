@@ -8,6 +8,21 @@ let forward = true      // forward / reverse flag, values false: reverse / true:
 radio.setGroup(20)
 basic.showArrow(ArrowNames.North)
 
+input.onButtonPressed(Button.A, function() {
+    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, 50)
+    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, 50)
+})
+
+input.onButtonPressed(Button.B, function () {
+    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, 100)
+    Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, 100)
+})
+
+input.onButtonPressed(Button.AB, function () {
+    Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor1)
+    Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor2)
+})
+
 function setSpeed() {
     let speedLeft = speed
     let speedRight = speed
@@ -16,8 +31,8 @@ function setSpeed() {
         Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor2)
         basic.clearScreen()
         return
-    } 
-    
+    }
+
     if (heading > 0) {
         // Turning right, right motor is slowing down
         // Eks:
@@ -25,7 +40,7 @@ function setSpeed() {
         // heading = 10
         // speedRight = 75 - Math.floor(75 * (10 / 100))
         // speedRight = 75 - 7 == 68
-        speedRight = speed - Math.floor(speed * (heading / 100)) 
+        speedRight = speed - Math.floor(speed * (heading / 100))
     } else {
         // Turning left, left motor is slowing down
         // Eks:
@@ -33,13 +48,13 @@ function setSpeed() {
         // heading = -20
         // speedLeft = 75 - Math.floor(75 * (20 * -1 / 100))
         // 60 = 75 - 15
-        speedLeft = speed - Math.floor(speed * (heading * -1 / 100)) 
+        speedLeft = speed - Math.floor(speed * (heading * -1 / 100))
     }
-    
+
     if (forward) {
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, speedLeft)
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, speedRight)
-    } else { 
+    } else {
         // reverse
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, speedRight)
         Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, speedLeft)
@@ -47,65 +62,65 @@ function setSpeed() {
 }
 
 radio.onReceivedValue(function (name: string, value: number) {
-  switch (name) {
-      case "fw":
-        if (value > 0) {
-            forward = true
-            basic.showArrow(ArrowNames.North)
-        } else {
-            forward = false
-            basic.showArrow(ArrowNames.South)
+    switch (name) {
+        case "fw":
+            if (value > 0) {
+                forward = true
+                basic.showArrow(ArrowNames.North)
+            } else {
+                forward = false
+                basic.showArrow(ArrowNames.South)
+            }
+            break;
+        case "info":
+            basic.showString("s:" + speed + " h:" + heading)
+            if (forward) {
+                basic.showArrow(ArrowNames.North)
+            } else {
+                basic.showArrow(ArrowNames.South)
+            }
+            break;
+        case "sp":
+            speed = value
+            setSpeed()
+            break;
+        case "hd":
+            heading = value
+            setSpeed()
+            break;
+        case "ls":
+            leftSpeed = value
+            if (value == 0) {
+                Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor1)
+            }
+            else if (value > 0) {
+                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, value)
+            } else {
+                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, value * -1)
+            }
+            showSpeedInfo()
+            break;
+        case "rs":
+            rightSpeed = value
+            if (value == 0) {
+                Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor2)
+            }
+            else if (value > 0) {
+                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, value)
+            } else {
+                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, value * -1)
+            }
+            showSpeedInfo()
+            break;
+        default: {
+            basic.showString("E:" + name + ": " + value.toString())
         }
-      break;
-      case "info": 
-        basic.showString("s:" + speed + " h:" + heading)
-        if (forward){
-            basic.showArrow(ArrowNames.North)
-        } else {
-            basic.showArrow(ArrowNames.South)
-        }
-      break;
-      case "sp": 
-        speed = value
-        setSpeed()
-      break;
-      case "hd": 
-        heading = value
-        setSpeed()
-      break;
-      case "ls": 
-        leftSpeed = value
-        if (value == 0) {
-            Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor1)
-        } 
-        else if (value > 0) {
-            Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, value)
-        } else {
-            Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, value*-1)
-        }
-        showSpeedInfo()
-      break;
-      case "rs":
-        rightSpeed = value
-        if (value == 0) {
-            Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor2)
-        } 
-        else if (value > 0) {
-            Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Forward, value)
-        } else {
-            Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor2, Kitronik_Robotics_Board.MotorDirection.Reverse, value*-1)
-        }
-        showSpeedInfo()
-      break;
-      default : {
-          basic.showString("E:" + name +  ": " + value.toString())
-      }
-      showSpeedInfo()
-  }
+            showSpeedInfo()
+    }
 })
 
 
-function showSpeedInfo(){
+function showSpeedInfo() {
 
     if (leftSpeed == 0 && rightSpeed == 0) {
         basic.clearScreen()
@@ -119,15 +134,15 @@ function showSpeedInfo(){
         . . . . .
         . . . . .
         . . . . .
-        `) 
-    } else  if (leftSpeed < 0 && rightSpeed < 0) {
+        `)
+    } else if (leftSpeed < 0 && rightSpeed < 0) {
         basic.plotLeds(`
         . . . . .
         . . . . .
         . . . . .
         # # # # #
         . # . # .
-        `) 
+        `)
     } else if (leftSpeed > 0 && rightSpeed < 0) {
         basic.plotLeds(`
         . # . . .
@@ -135,7 +150,7 @@ function showSpeedInfo(){
         . . . . .
         . . # # #
         . . . # .
-        `) 
+        `)
     } else {
         basic.plotLeds(`
         . . . # .
@@ -143,11 +158,11 @@ function showSpeedInfo(){
         . . . . .
         # # # . .
         . # . . .
-        `) 
+        `)
     }
 }
 
 
 basic.forever(function () {
-	
+
 })
